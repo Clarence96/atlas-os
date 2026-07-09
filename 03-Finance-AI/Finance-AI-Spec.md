@@ -61,10 +61,10 @@ Pour le prototype, les données sont saisies manuellement par Isaïe :
 
 ---
 
-## 7. Questions ouvertes (à trancher)
+## 7. Questions tranchées (2026-07-09)
 
-- [ ] Seuil d'alerte : à partir de quel solde minimum faut-il alerter ?
-- [ ] Devise : XPF uniquement, ou multi-devises pour l'Australie ?
-- [ ] Les données doivent-elles être stockées en JSON local ou dans une base de données ?
-- [ ] Faut-il un tableau de bord visuel ou simplement des réponses textuelles ?
-- [ ] L'agent doit-il aussi suivre les objectifs d'épargne ?
+- [x] **Seuil d'alerte :** 100 000 XPF. L'agent alerte si le solde projeté passe sous ce seuil.
+- [x] **Devises :** Multi-devises. XPF (BCI Nouvelle-Calédonie), EUR (Revolut), AUD (Westpac à venir).
+- [x] **Stockage :** Fichier JSON local dans 03-Finance-AI/data/. Les données sensibles (numéros de compte) seront cryptées à part.
+- [x] **Interface :** Tableau de bord visuel avec graphiques par devise et vue globale consolidée.
+- [x] **Objectifs d'épargne :** Système ajustable. Création, modification et suivi de progression des objectifs.
