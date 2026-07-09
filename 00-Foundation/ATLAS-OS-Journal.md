@@ -40,3 +40,8 @@ Toute décision technique, même minime, est notée ici avec la date et la raiso
 **Décision :** Validation des spécifications fonctionnelles de Dupsolaz AI.
 **Choix clés :** Interface web chat, génération DOCX + PDF, pas de CRM externe, templates issus de Canva, relecture interactive obligatoire.
 **Conséquence :** Début de la collecte des modèles Canva et préparation du premier prototype.
+
+### 2026-07-09 — Premier prototype Dupsolaz AI fonctionnel
+**Décision :** Premier générateur de devis opérationnel avec Ollama et Python.
+**Résultat :** Génération d'un devis JSON valide avec calcul automatique des montants, TGC à 6%, et distinction émetteur/client.
+**Prochaines étapes :** Génération du DOCX à partir du JSON, interface web de chat, amélioration des templates.
