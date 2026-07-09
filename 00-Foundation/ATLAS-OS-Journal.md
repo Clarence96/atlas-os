@@ -45,3 +45,8 @@ Toute décision technique, même minime, est notée ici avec la date et la raiso
 **Décision :** Premier générateur de devis opérationnel avec Ollama et Python.
 **Résultat :** Génération d'un devis JSON valide avec calcul automatique des montants, TGC à 6%, et distinction émetteur/client.
 **Prochaines étapes :** Génération du DOCX à partir du JSON, interface web de chat, amélioration des templates.
+
+### 2026-07-09 — Lancement conception Finance AI
+**Décision :** Début de la conception de Finance AI, deuxième agent ATLAS OS.
+**Choix clés :** Multi-devises (XPF, EUR, AUD), stockage JSON local, tableau de bord visuel, objectifs d'épargne ajustables, seuil d'alerte à 100 000 XPF.
+**Conséquence :** Développement du prototype de gestion financière.
