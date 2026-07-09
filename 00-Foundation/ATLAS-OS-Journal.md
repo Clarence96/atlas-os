@@ -60,3 +60,8 @@ Toute décision technique, même minime, est notée ici avec la date et la raiso
 **Décision :** Début de la conception de Australia AI, troisième agent ATLAS OS.
 **Choix clés :** Veille automatisée, 3 phases de métiers (farm, aérien/admin, FIFO), suivi par région, module coût de vie, alerte CV anglais.
 **Conséquence :** Développement du prototype de veille Australie.
+
+### 2026-07-09 — Australia AI opérationnel
+**Décision :** Déploiement du tableau de bord Australia AI avec check-list interactive et chat connecté à Ollama.
+**Résultat :** Check-list de départ avec suivi de progression, chat capable de répondre aux questions sur les visas, les régions et les démarches administratives.
+**Prochaines étapes :** Ajout scraping offres d'emploi, module coût de vie, connexion au Chief AI.
