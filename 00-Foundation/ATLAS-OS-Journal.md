@@ -50,3 +50,8 @@ Toute décision technique, même minime, est notée ici avec la date et la raiso
 **Décision :** Début de la conception de Finance AI, deuxième agent ATLAS OS.
 **Choix clés :** Multi-devises (XPF, EUR, AUD), stockage JSON local, tableau de bord visuel, objectifs d'épargne ajustables, seuil d'alerte à 100 000 XPF.
 **Conséquence :** Développement du prototype de gestion financière.
+
+### 2026-07-09 — Finance AI opérationnel avec chat intelligent
+**Décision :** Déploiement du tableau de bord Finance AI avec chat connecté à Ollama.
+**Résultat :** Tableau de bord visuel multi-devises, calcul de projection 30 jours, système d'alerte, et chat capable d'analyser la situation financière pour répondre aux questions de type "Puis-je acheter X ?".
+**Prochaines étapes :** Ajout des objectifs d'épargne, affinage des prompts, connexion à Australia AI.
