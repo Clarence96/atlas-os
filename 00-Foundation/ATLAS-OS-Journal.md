@@ -55,3 +55,8 @@ Toute décision technique, même minime, est notée ici avec la date et la raiso
 **Décision :** Déploiement du tableau de bord Finance AI avec chat connecté à Ollama.
 **Résultat :** Tableau de bord visuel multi-devises, calcul de projection 30 jours, système d'alerte, et chat capable d'analyser la situation financière pour répondre aux questions de type "Puis-je acheter X ?".
 **Prochaines étapes :** Ajout des objectifs d'épargne, affinage des prompts, connexion à Australia AI.
+
+### 2026-07-09 — Lancement conception Australia AI
+**Décision :** Début de la conception de Australia AI, troisième agent ATLAS OS.
+**Choix clés :** Veille automatisée, 3 phases de métiers (farm, aérien/admin, FIFO), suivi par région, module coût de vie, alerte CV anglais.
+**Conséquence :** Développement du prototype de veille Australie.

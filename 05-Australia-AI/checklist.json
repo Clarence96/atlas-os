@@ -1,0 +1,135 @@
+{
+  "phases": [
+    {
+      "nom": "Avant le d\u00e9part (Noum\u00e9a)",
+      "taches": [
+        {
+          "libelle": "Cr\u00e9er un CV en anglais",
+          "fait": false,
+          "priorite": "haute"
+        },
+        {
+          "libelle": "Obtenir un extrait de casier judiciaire (Crime Check)",
+          "fait": false,
+          "priorite": "haute"
+        },
+        {
+          "libelle": "V\u00e9rifier validit\u00e9 du passeport (6 mois apr\u00e8s arriv\u00e9e)",
+          "fait": false,
+          "priorite": "haute"
+        },
+        {
+          "libelle": "Souscrire assurance voyage PVT",
+          "fait": false,
+          "priorite": "haute"
+        },
+        {
+          "libelle": "Imprimer visa grant notice",
+          "fait": false,
+          "priorite": "haute"
+        },
+        {
+          "libelle": "Num\u00e9riser tous les documents importants",
+          "fait": false,
+          "priorite": "moyenne"
+        },
+        {
+          "libelle": "Pr\u00e9venir la banque BCI du d\u00e9part",
+          "fait": false,
+          "priorite": "moyenne"
+        }
+      ]
+    },
+    {
+      "nom": "Arriv\u00e9e \u00e0 Sydney (Semaines 1-2)",
+      "taches": [
+        {
+          "libelle": "Ouvrir compte bancaire Westpac",
+          "fait": false,
+          "priorite": "haute"
+        },
+        {
+          "libelle": "Demander un TFN (Tax File Number)",
+          "fait": false,
+          "priorite": "haute"
+        },
+        {
+          "libelle": "Acheter carte SIM Telstra",
+          "fait": false,
+          "priorite": "haute"
+        },
+        {
+          "libelle": "Faire v\u00e9rifier le Crime Check australien",
+          "fait": false,
+          "priorite": "haute"
+        },
+        {
+          "libelle": "Obtenir une adresse postale stable",
+          "fait": false,
+          "priorite": "moyenne"
+        },
+        {
+          "libelle": "S'inscrire \u00e0 Medicare (si \u00e9ligible)",
+          "fait": false,
+          "priorite": "moyenne"
+        }
+      ]
+    },
+    {
+      "nom": "88 jours - Farm Work",
+      "taches": [
+        {
+          "libelle": "Rechercher des fermes recrutant des backpackers",
+          "fait": false,
+          "priorite": "haute"
+        },
+        {
+          "libelle": "Postuler aux offres de farm work",
+          "fait": false,
+          "priorite": "haute"
+        },
+        {
+          "libelle": "V\u00e9rifier que l'employeur remplit le formulaire 1263",
+          "fait": false,
+          "priorite": "haute"
+        },
+        {
+          "libelle": "Tenir un journal des jours travaill\u00e9s",
+          "fait": false,
+          "priorite": "haute"
+        },
+        {
+          "libelle": "Conserver toutes les fiches de paie",
+          "fait": false,
+          "priorite": "haute"
+        }
+      ]
+    },
+    {
+      "nom": "Pr\u00e9paration 2\u00e8me visa / PR",
+      "taches": [
+        {
+          "libelle": "Faire reconna\u00eetre ses dipl\u00f4mes (skills assessment)",
+          "fait": false,
+          "priorite": "haute"
+        },
+        {
+          "libelle": "Pr\u00e9parer et passer l'IELTS (objectif 7.5)",
+          "fait": false,
+          "priorite": "haute"
+        },
+        {
+          "libelle": "Rechercher des formations Dump Truck \u00e0 Perth",
+          "fait": false,
+          "priorite": "moyenne"
+        },
+        {
+          "libelle": "Constituer le dossier de demande de PR",
+          "fait": false,
+          "priorite": "haute"
+        }
+      ]
+    }
+  ],
+  "derniere_maj": "2026-07-09"
+}
