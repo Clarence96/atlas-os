@@ -70,3 +70,8 @@ Toute décision technique, même minime, est notée ici avec la date et la raiso
 **Raison :** Llama 3.2 inventait trop de chiffres et manquait de rigueur. Qwen 2.5 offre un meilleur raisonnement pour 4,4 Go (compatible M4).
 **Impact :** Chief AI, Dupsolaz AI, Finance AI et Australia AI utilisent désormais qwen2.5:7b.
 **Données financières :** Correction des soldes et charges avec les vrais chiffres (BCI Courant, Épargne, Revolut, crédits, OPT).
+
+### 2026-07-10 — Lancement conception Trading AI
+**Décision :** Début de la conception de Trading AI, quatrième agent ATLAS OS.
+**Choix clés :** Focus XAU/USD, day trading, phase d'apprentissage sans prop firm, pas de calendrier économique pour le moment.
+**Conséquence :** Développement d'un agent tuteur pour l'analyse technique.
