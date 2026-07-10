@@ -65,3 +65,8 @@ Toute décision technique, même minime, est notée ici avec la date et la raiso
 **Décision :** Déploiement du tableau de bord Australia AI avec check-list interactive et chat connecté à Ollama.
 **Résultat :** Check-list de départ avec suivi de progression, chat capable de répondre aux questions sur les visas, les régions et les démarches administratives.
 **Prochaines étapes :** Ajout scraping offres d'emploi, module coût de vie, connexion au Chief AI.
+### 2026-07-10 — Migration vers Qwen 2.5 7B + correction données financières
+**Décision :** Remplacement de Llama 3.2 par Qwen 2.5 7B sur tous les agents.
+**Raison :** Llama 3.2 inventait trop de chiffres et manquait de rigueur. Qwen 2.5 offre un meilleur raisonnement pour 4,4 Go (compatible M4).
+**Impact :** Chief AI, Dupsolaz AI, Finance AI et Australia AI utilisent désormais qwen2.5:7b.
+**Données financières :** Correction des soldes et charges avec les vrais chiffres (BCI Courant, Épargne, Revolut, crédits, OPT).
