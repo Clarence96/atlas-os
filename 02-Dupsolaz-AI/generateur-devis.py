@@ -104,7 +104,7 @@ Génère le devis complet au format JSON. Rappel : Dupsolaz Legacy est l'ÉMETTE
     
     try:
         response = ollama.chat(
-            model="llama3.2",
+            model="qwen2.5:7b",
             messages=[
                 {"role": "system", "content": SYSTEM_PROMPT},
                 {"role": "user", "content": prompt_utilisateur}

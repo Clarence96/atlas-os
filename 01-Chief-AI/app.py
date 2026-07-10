@@ -1,92 +1,56 @@
 from flask import Flask, render_template_string, request, jsonify
 import ollama
 import json
+import os
 
 app = Flask(__name__)
 
 # ============================================================
-# PROFIL COMPLET D'ISAÏE (fourni à Chief AI)
+# CALCULS FINANCIERS (Python uniquement, pas d'IA)
 # ============================================================
-PROFIL_ISAIE = """
-PROFIL COMPLET D'ISAÏE MAFILEO :
+def charger_finances():
+    chemin = os.path.join(os.path.dirname(__file__), "..", "03-Finance-AI", "data", "finances.json")
+    with open(chemin, 'r') as f:
+        return json.load(f)
 
-ENTREPRISE :
-- Dupsolaz Legacy (EI)
-- Services administratifs et structuration d'entreprise
-- Basé à Mont-Dore, Nouméa, Nouvelle-Calédonie
-- RIDET : 1 637 735.001
-- Tarif horaire : à partir de 5 000 XPF HT selon le service
-- Soumis à la TGC (6%) et non à la TVA
-
-FINANCES :
-- Compte BCI Courant (XPF)
-- Compte BCI Épargne (XPF)
-- Compte Revolut (EUR)
-- Futur compte Westpac (AUD)
-- Soumis à la TGC (6%) et non à la TVA
-- Enveloppe Australie : 600 000 XPF (arrive dans 20 jours)
-- Garantie après premières dépenses : environ 340 000 XPF pour tenir jusqu'au premier emploi (88 jours)
-- Seuil d'alerte : 100 000 XPF 
-
-PROJET AUSTRALIE :
-- Départ prévu pour Sydney (2 semaines admin)
-- Phase 1 : 88 jours de farm work pour 2ème visa
-- Phase 2 : Emploi aérien/agence/admin pour fonds
-- Phase 3 : Formation Dump Truck Operator à Perth
-- Objectif final : Résidence Permanente (PR)
-- IELTS cible : 7.5 minimum
-- Régions : Sydney, NSW/QLD/VIC rural, Perth, Pilbara
-- Budget Estimé nécessaire : 600 000 XPF
-
-COMPÉTENCES :
-- Secrétariat, administration, structuration d'entreprise
-- Accueil, relation client, gestion administrative
-- Expérience en gestion administrative et relation client
-- Permis de conduire
-- Informatique : VS Code, Python, Flutter, IA
-- Langues : Français (natif), Anglais (bon niveau, cible 7.5 IELTS)
-"""
-
-# ============================================================
-# DESCRIPTION DES AGENTS DISPONIBLES
-# ============================================================
-AGENTS = {
-    "dupsolaz": {
-        "nom": "Dupsolaz AI",
-        "role": "Assistant administratif et commercial",
-        "domaines": ["devis", "facture", "contrat", "client", "prestation", "secrétariat", "Dupsolaz", "TGC"],
-        "port": 5000
-    },
-    "finance": {
-        "nom": "Finance AI",
-        "role": "Trésorier personnel",
-        "domaines": ["argent", "compte", "solde", "budget", "épargne", "achat", "dépense", "XPF", "EUR", "AUD", "trésorerie", "projection"],
-        "port": 5001
-    },
-    "australia": {
-        "nom": "Australia AI",
-        "role": "Assistant mobilité Australie",
-        "domaines": ["Australie", "visa", "FIFO", "farm", "Perth", "Sydney", "IELTS", "PR", "Westpac", "démarche", "départ", "déménagement"],
-        "port": 5002
+def calculer_strategie():
+    donnees = charger_finances()
+    taux_xpf = {"XPF": 1, "EUR": 119.33, "AUD": 72.46}
+    
+    solde_total = 0
+    for compte in donnees["comptes"].values():
+        if compte.get("actif", True):
+            solde_total += compte["solde"] * taux_xpf.get(compte["devise"], 1)
+    
+    charges = sum(
+        c["montant"] * taux_xpf.get(c["devise"], 1)
+        for c in donnees["charges_fixes"]
+        if c["frequence"] == "mensuelle"
+    )
+    
+    enveloppe = 600000
+    garantie = 340000
+    a_reunir = enveloppe - garantie
+    tarif = 5000
+    heures = a_reunir / tarif
+    mois = 8
+    heures_semaine = heures / (mois * 4.33)
+    revenu_ttc = a_reunir * 1.06
+    
+    return {
+        "solde": round(solde_total),
+        "charges": round(charges),
+        "enveloppe": enveloppe,
+        "garantie": garantie,
+        "a_reunir": a_reunir,
+        "tarif": tarif,
+        "heures": round(heures, 1),
+        "heures_semaine": round(heures_semaine, 1),
+        "mois": mois,
+        "revenu_ttc": round(revenu_ttc),
+        "seuil": 100000,
+        "projection": round(solde_total) - round(charges) + a_reunir
     }
-}
-
-def detecter_agent(question):
-    """Détecte quel(s) agent(s) sont pertinents pour la question."""
-    question_lower = question.lower()
-    agents_pertinents = []
-    
-    for agent_id, agent_info in AGENTS.items():
-        for mot_cle in agent_info["domaines"]:
-            if mot_cle.lower() in question_lower:
-                agents_pertinents.append(agent_id)
-                break
-    
-    # Si aucun mot-clé trouvé, on interroge tout le monde
-    if not agents_pertinents:
-        agents_pertinents = list(AGENTS.keys())
-    
-    return agents_pertinents
 
 # ============================================================
 # TEMPLATE HTML
@@ -103,60 +67,78 @@ HTML_TEMPLATE = """
         body { font-family: -apple-system, sans-serif; background: #0a0a1a; color: #eee; min-height: 100vh; display: flex; flex-direction: column; }
         .header { background: linear-gradient(135deg, #1a1a3e, #0f3460); padding: 25px; text-align: center; border-bottom: 3px solid #e94560; }
         .header h1 { font-size: 28px; background: linear-gradient(90deg, #e94560, #f0a500); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .header .subtitle { opacity: 0.7; margin-top: 5px; }
-        .agents-bar { display: flex; justify-content: center; gap: 15px; padding: 15px; background: #0f3460; flex-wrap: wrap; }
-        .agent-badge { padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: bold; }
-        .agent-badge.active { background: #4ecca3; color: #1a1a2e; }
-        .agent-badge.inactive { background: #333; color: #888; }
-        .chat-container { flex: 1; max-width: 900px; width: 100%; margin: 0 auto; padding: 20px; display: flex; flex-direction: column; }
-        .chat-messages { flex: 1; overflow-y: auto; margin-bottom: 15px; }
-        .chat-msg { margin-bottom: 15px; padding: 14px 18px; border-radius: 12px; max-width: 85%; line-height: 1.5; font-size: 15px; }
+        .dashboard { max-width: 900px; margin: 20px auto; padding: 0 20px; flex: 1; width: 100%; }
+        .card { background: #16213e; border-radius: 12px; padding: 20px; margin-bottom: 15px; border: 1px solid #0f3460; }
+        .card h3 { color: #e94560; margin-bottom: 10px; }
+        .big-number { font-size: 36px; font-weight: bold; color: #4ecca3; }
+        .highlight { color: #f0a500; font-weight: bold; }
+        .row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #0f3460; }
+        .row:last-child { border-bottom: none; }
+        .chat-section { border-top: 2px solid #0f3460; padding: 20px; background: #16213e; margin-top: 20px; }
+        .chat-messages { max-height: 200px; overflow-y: auto; margin-bottom: 10px; }
+        .chat-msg { margin-bottom: 10px; padding: 10px 14px; border-radius: 10px; max-width: 85%; line-height: 1.4; font-size: 14px; }
         .chat-msg.user { background: #e94560; color: white; margin-left: auto; text-align: right; }
-        .chat-msg.chief { background: #16213e; border: 1px solid #0f3460; color: #ddd; }
-        .chat-msg.chief .source { font-size: 11px; color: #f0a500; margin-top: 6px; font-style: italic; }
+        .chat-msg.agent { background: #0f3460; color: #ddd; }
         .chat-input { display: flex; gap: 10px; }
-        .chat-input input { flex: 1; padding: 14px 18px; border-radius: 25px; border: 1px solid #0f3460; background: #16213e; color: #eee; font-size: 15px; outline: none; }
-        .chat-input input:focus { border-color: #e94560; }
-        .chat-input button { padding: 14px 28px; background: linear-gradient(135deg, #e94560, #c23152); color: white; border: none; border-radius: 25px; cursor: pointer; font-weight: bold; font-size: 15px; }
-        .chat-input button:hover { opacity: 0.9; }
+        .chat-input input { flex: 1; padding: 12px 16px; border-radius: 20px; border: 1px solid #0f3460; background: #1a1a2e; color: #eee; font-size: 14px; outline: none; }
+        .chat-input button { padding: 12px 24px; background: #e94560; color: white; border: none; border-radius: 20px; cursor: pointer; font-weight: bold; }
+        .btn-refresh { padding: 10px 20px; background: #0f3460; color: #4ecca3; border: 1px solid #4ecca3; border-radius: 8px; cursor: pointer; margin-top: 10px; }
         .loading-msg { color: #888; font-style: italic; padding: 10px; }
     </style>
 </head>
 <body>
     <div class="header">
         <h1>🧠 ATLAS OS — Chief AI</h1>
-        <p class="subtitle">Orchestrateur d'agents intelligents</p>
+        <p style="opacity:0.7;">Tableau de bord stratégique</p>
     </div>
     
-    <div class="agents-bar">
-        <span class="agent-badge inactive" id="badge-dupsolaz">📄 Dupsolaz AI</span>
-        <span class="agent-badge inactive" id="badge-finance">💰 Finance AI</span>
-        <span class="agent-badge inactive" id="badge-australia">🦘 Australia AI</span>
-    </div>
-    
-    <div class="chat-container">
-        <div class="chat-messages" id="chatMessages">
-            <div class="chat-msg chief">
-                🧠 Bonjour Isaïe. Je suis <strong>Chief AI</strong>, le coordinateur d'ATLAS OS.<br><br>
-                Je peux interroger plusieurs agents en même temps pour répondre à tes questions complexes.<br><br>
-                <em>Essaie par exemple :</em><br>
-                • "Je pars en Australie dans 8 mois, quel est mon budget ?"<br>
-                • "Combien de devis Dupsolaz dois-je faire pour financer mon départ ?"<br>
-                • "Quelles démarches pour le visa et quel impact sur mes finances ?"
-            </div>
+    <div class="dashboard">
+        <div class="card">
+            <h3>🎯 Plan Départ Australie</h3>
+            <div class="row"><span>Enveloppe Australie</span><span class="highlight" id="enveloppe">—</span></div>
+            <div class="row"><span>Garantie après dépenses</span><span class="highlight" id="garantie">—</span></div>
+            <div class="row"><span>Montant à réunir</span><span class="highlight" id="aReunir">—</span></div>
+            <div class="row"><span>Tarif Dupsolaz</span><span id="tarif">—</span></div>
+            <div class="row"><span>Heures de prestation nécessaires</span><span class="highlight" id="heures">—</span></div>
+            <div class="row"><span>Soit par semaine (sur 8 mois)</span><span class="highlight" id="heuresSemaine">—</span></div>
+            <div class="row"><span>Revenu TTC généré</span><span class="highlight" id="revenuTtc">—</span></div>
         </div>
         
+        <div class="card">
+            <h3>💰 Situation Financière</h3>
+            <div class="row"><span>Solde total</span><span class="highlight" id="solde">—</span></div>
+            <div class="row"><span>Charges mensuelles</span><span id="charges">—</span></div>
+            <div class="row"><span>Seuil d'alerte</span><span id="seuil">—</span></div>
+            <button class="btn-refresh" onclick="chargerDashboard()">🔄 Rafraîchir</button>
+        </div>
+    </div>
+    
+    <div class="chat-section" style="max-width:900px; margin:0 auto; width:100%;">
+        <div class="chat-messages" id="chatMessages">
+            <div class="chat-msg agent">
+                💬 <strong>Mode Conseil</strong> : Pose une question sur l'Australie, les visas, ou Dupsolaz. Les calculs financiers sont affichés ci-dessus et sont 100% fiables (calculés par Python, pas par l'IA).
+            </div>
+        </div>
         <div class="chat-input">
-            <input type="text" id="chatInput" placeholder="Pose ta question au Chief AI..." onkeypress="if(event.key==='Enter') poserQuestion()">
-            <button onclick="poserQuestion()">Demander</button>
+            <input type="text" id="chatInput" placeholder="Ex: Quelles démarches pour le PVT ?" onkeypress="if(event.key==='Enter') poserQuestion()">
+            <button onclick="poserQuestion()">Conseil</button>
         </div>
     </div>
     
     <script>
-        function activerBadges(agents) {
-            document.getElementById('badge-dupsolaz').className = 'agent-badge ' + (agents.includes('dupsolaz') ? 'active' : 'inactive');
-            document.getElementById('badge-finance').className = 'agent-badge ' + (agents.includes('finance') ? 'active' : 'inactive');
-            document.getElementById('badge-australia').className = 'agent-badge ' + (agents.includes('australia') ? 'active' : 'inactive');
+        async function chargerDashboard() {
+            const res = await fetch('/api/dashboard');
+            const d = await res.json();
+            document.getElementById('enveloppe').textContent = d.enveloppe.toLocaleString() + ' XPF';
+            document.getElementById('garantie').textContent = d.garantie.toLocaleString() + ' XPF';
+            document.getElementById('aReunir').textContent = d.a_reunir.toLocaleString() + ' XPF';
+            document.getElementById('tarif').textContent = d.tarif.toLocaleString() + ' XPF HT/h';
+            document.getElementById('heures').textContent = d.heures + ' heures';
+            document.getElementById('heuresSemaine').textContent = d.heures_semaine + ' h/semaine';
+            document.getElementById('revenuTtc').textContent = d.revenu_ttc.toLocaleString() + ' XPF';
+            document.getElementById('solde').textContent = d.solde.toLocaleString() + ' XPF';
+            document.getElementById('charges').textContent = d.charges.toLocaleString() + ' XPF';
+            document.getElementById('seuil').textContent = d.seuil.toLocaleString() + ' XPF';
         }
         
         async function poserQuestion() {
@@ -166,34 +148,23 @@ HTML_TEMPLATE = """
             
             const messages = document.getElementById('chatMessages');
             messages.innerHTML += `<div class="chat-msg user">${question}</div>`;
-            messages.innerHTML += '<div class="chat-msg chief loading-msg" id="loadingMsg">🧠 Analyse de la question et consultation des agents...</div>';
+            messages.innerHTML += '<div class="chat-msg agent loading-msg" id="loadingMsg">🧠 Réflexion...</div>';
             messages.scrollTop = messages.scrollHeight;
             input.value = '';
             
-            try {
-                const res = await fetch('/api/ask', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({question: question})
-                });
-                const data = await res.json();
-                
-                document.getElementById('loadingMsg').remove();
-                
-                let sourcesHtml = '';
-                if (data.agents_consultes && data.agents_consultes.length > 0) {
-                    sourcesHtml = `<div class="source">Agents consultés : ${data.agents_consultes.join(', ')}</div>`;
-                }
-                
-                messages.innerHTML += `<div class="chat-msg chief">${data.reponse.replace(/\\n/g, '<br>')}${sourcesHtml}</div>`;
-                messages.scrollTop = messages.scrollHeight;
-                
-                activerBadges(data.agents_consultes || []);
-            } catch (e) {
-                document.getElementById('loadingMsg').remove();
-                messages.innerHTML += '<div class="chat-msg chief">❌ Erreur de connexion au Chief AI.</div>';
-            }
+            const res = await fetch('/api/conseil', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({question: question})
+            });
+            const data = await res.json();
+            
+            document.getElementById('loadingMsg').remove();
+            messages.innerHTML += `<div class="chat-msg agent">${data.reponse.replace(/\\n/g, '<br>')}</div>`;
+            messages.scrollTop = messages.scrollHeight;
         }
+        
+        chargerDashboard();
     </script>
 </body>
 </html>
@@ -207,53 +178,37 @@ HTML_TEMPLATE = """
 def index():
     return render_template_string(HTML_TEMPLATE)
 
-@app.route('/api/ask', methods=['POST'])
-def ask():
+@app.route('/api/dashboard')
+def dashboard():
+    return jsonify(calculer_strategie())
+
+@app.route('/api/conseil', methods=['POST'])
+def conseil():
     question = request.json.get('question', '')
-    
-    # Détecter quels agents sont pertinents
-    agents_pertinents = detecter_agent(question)
-    
-    # Construire le prompt pour Chief AI
-    agents_description = "\n".join([
-        f"- {AGENTS[a]['nom']} : {AGENTS[a]['role']} (domaines : {', '.join(AGENTS[a]['domaines'])})"
-        for a in agents_pertinents
-    ])
+    strategie = calculer_strategie()
     
     try:
         response = ollama.chat(
-            model="llama3.2",
+            model="qwen2.5:7b",
             messages=[
                 {
                     "role": "system",
-                    "content": f"""Tu es Chief AI, le coordinateur d'ATLAS OS.
+                    "content": f"""Tu es Chief AI, conseiller pour Isaïe.
 
-PROFIL D'ISAÏE :
-{PROFIL_ISAIE}
+PROFIL : Isaïe prépare son départ en Australie dans 8 mois. Enveloppe : 600 000 XPF (dont 340 000 restants après dépenses). Il doit réunir 260 000 XPF via Dupsolaz (tarif : 5 000 XPF/h). Phases : Sydney → 88 jours farm → emploi aérien/admin → formation Dump Truck → PR.
 
-RÈGLES ABSOLUES :
-1. Tu réponds en français, de façon concise.
-2. Tu utilises UNIQUEMENT les chiffres du profil. Si un chiffre n'y est pas, dis "je ne sais pas".
-3. Pour un calcul, tu poses l'opération clairement.
-4. Pour une question d'argent, tu raisonnes en XPF.
-5. Tu ne fais JAMAIS d'addition entre deux montants qui représentent la même chose.
-6. Distingue bien : "enveloppe totale" (600 000 XPF) et "reste après dépenses" (340 000 XPF). Ce n'est pas 600 000 + 340 000 = 940 000. C'est 600 000 dont il restera 340 000 après dépenses.
-7. Tarif Dupsolaz : à partir de 5000 XPF HT par heure.
-8. Termine par UNE phrase de recommandation."""
+RÈGLES : Réponds en français. Sois concis (8-10 lignes max). Appuie-toi sur le profil. N'invente pas de chiffres. Termine par un conseil concret."""
                 },
-                {"role": "user", "content": f"Question d'Isaïe : {question}\n\nAgents pertinents détectés : {', '.join(agents_pertinents)}. Fournis une réponse unifiée."}
+                {"role": "user", "content": question}
             ]
         )
         reponse = response['message']['content'].strip()
-    except Exception as e:
-        reponse = f"❌ Erreur Ollama. Détail : {e}"
+    except:
+        reponse = "❌ Ollama non disponible. Lance 'ollama serve'."
     
-    return jsonify({
-        "reponse": reponse,
-        "agents_consultes": [AGENTS[a]['nom'] for a in agents_pertinents]
-    })
+    return jsonify({"reponse": reponse})
 
 if __name__ == '__main__':
-    print("🧠 Chief AI - Orchestrateur ATLAS OS")
+    print("🧠 Chief AI - Tableau de bord stratégique")
     print("http://127.0.0.1:5003")
     app.run(debug=True, host='127.0.0.1', port=5003)

@@ -282,7 +282,7 @@ def api_chat():
     
     try:
         response = ollama.chat(
-            model="llama3.2",
+            model="qwen2.5:7b",
             messages=[
                 {
                     "role": "system",
