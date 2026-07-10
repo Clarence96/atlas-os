@@ -75,3 +75,8 @@ Toute décision technique, même minime, est notée ici avec la date et la raiso
 **Décision :** Début de la conception de Trading AI, quatrième agent ATLAS OS.
 **Choix clés :** Focus XAU/USD, day trading, phase d'apprentissage sans prop firm, pas de calendrier économique pour le moment.
 **Conséquence :** Développement d'un agent tuteur pour l'analyse technique.
+
+### 2026-07-10 — Lancement conception Learning AI
+**Décision :** Début de la conception de Learning AI, cinquième agent ATLAS OS.
+**Choix clés :** Priorité IELTS, 30-45 min/jour, quiz de 20 questions, ressources gratuites, trading en parallèle doux.
+**Conséquence :** Développement d'un tuteur IELTS + culture générale.
