@@ -38,6 +38,10 @@ sleep 1
 echo "📚 Lancement de Learning AI (port 5005)..."
 osascript -e 'tell app "Terminal" to do script "cd ~/Desktop/ATLAS-OS && source venv/bin/activate && python 06-Learning-AI/app.py"'
 
+sleep 1
+echo "🤝 Lancement de Personal AI (port 5006)..."
+osascript -e 'tell app "Terminal" to do script "cd ~/Desktop/ATLAS-OS && source venv/bin/activate && python 07-Personal-AI/app.py"'
+
 echo ""
 echo "✅ ATLAS OS est lancé !"
 echo ""
@@ -47,5 +51,6 @@ echo "🦘 Australia AI → http://127.0.0.1:5002"
 echo "🧠 Chief AI     → http://127.0.0.1:5003"
 echo "📈 Trading AI   → http://127.0.0.1:5004"
 echo "📚 Learning AI  → http://127.0.0.1:5005"
+echo "🤝 Personal AI  → http://127.0.0.1:5006"
 echo ""
 echo "⚠️  Laisse les fenêtres Terminal ouvertes."
