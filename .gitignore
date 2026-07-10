@@ -1,0 +1,20 @@
+# Fichiers sensibles - Données personnelles
+03-Finance-AI/data/finances.json
+07-Personal-AI/notes.json
+07-Personal-AI/rappels.json
+06-Learning-AI/progres.json
+04-Trading-AI/journal_trading.json
+
+# Fichiers Python temporaires
+__pycache__/
+*.pyc
+
+# Environnement virtuel
+venv/
+
+# Fichiers générés
+02-Dupsolaz-AI/documents_generees/
+*.docx
+
+# Fichiers système Mac
+.DS_Store
